@@ -5,6 +5,11 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# IMPORTANTE: Este proyecto usa prerender (generación estática)
+# NO necesita SSR completo en tiempo de ejecución
+# El plugin @netlify/angular-runtime debe estar DESACTIVADO en la UI de Netlify
+# Site settings → Build & deploy → Plugins → Desactivar/Eliminar @netlify/angular-runtime
+
 # Redirecciones para SPA routing
 # Esto asegura que todas las rutas funcionen correctamente
 [[redirects]]
