@@ -1,0 +1,17 @@
+@if (text) {
+  <span
+    #textContainer
+    [class]="getContainerClass()"
+    [attr.aria-label]="text"
+    role="text"
+    class="encrypted-text-wrapper">
+    @for (char of displayChars; track $index) {
+      @if (char === ' ') {
+        <span [class]="getCharClass($index)" class="encrypted-text-char encrypted-text-space">&nbsp;</span>
+      } @else {
+        <span [class]="getCharClass($index)" class="encrypted-text-char">{{ char }}</span>
+      }
+    }
+  </span>
+}
+

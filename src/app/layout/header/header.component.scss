@@ -1,0 +1,170 @@
+// Logo con círculo de fondo
+.logo-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgb(55, 65, 81);
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  // Fondo del círculo usando pseudo-elemento
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background-color: rgb(17, 24, 39);
+    z-index: -1;
+    transition: background-color 0.3s ease;
+  }
+  
+  // Fondo oscuro en tema claro, blanco en tema oscuro
+  :host-context(.dark) &::before,
+  .dark &::before {
+    background-color: rgb(255, 255, 255);
+  }
+  
+  // Borde oscuro en tema claro, claro en tema oscuro
+  :host-context(.dark) &,
+  .dark & {
+    border-color: rgb(209, 213, 219);
+  }
+  
+  // Colores del texto (gradiente) - tema claro
+  background-image: linear-gradient(to right, rgb(37, 99, 235), rgb(99, 102, 241), rgb(139, 92, 246));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  
+  // Gradiente más claro en dark mode
+  :host-context(.dark) &,
+  .dark & {
+    background-image: linear-gradient(to right, rgb(96, 165, 250), rgb(129, 140, 248), rgb(167, 139, 250));
+  }
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// Backdrop para el menú móvil (fondo oscuro semitransparente)
+.mobile-menu-backdrop {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9998 !important;
+  animation: fadeIn 0.2s ease-out;
+  margin: 0;
+  padding: 0;
+}
+
+// Botón de cerrar (X) fuera del panel
+.mobile-menu-close-button {
+  position: fixed !important;
+  top: 1rem !important;
+  left: calc(280px + 1rem) !important;
+  z-index: 10000 !important;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgb(255, 255, 255);
+  border: 2px solid rgb(229, 231, 235);
+  color: rgb(55, 65, 81);
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.2s ease-out 0.1s both;
+  
+  &:hover {
+    background-color: rgb(243, 244, 246);
+    border-color: rgb(209, 213, 219);
+    transform: scale(1.05);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  // Dark mode
+  :host-context(.dark) &,
+  .dark & {
+    background-color: rgb(31, 41, 55);
+    border-color: rgb(55, 65, 81);
+    color: rgb(209, 213, 219);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    &:hover {
+      background-color: rgb(55, 65, 81);
+      border-color: rgb(75, 85, 99);
+    }
+  }
+  
+  // Responsive para pantallas más pequeñas
+  @media (max-width: 330px) {
+    left: calc(85vw + 0.5rem) !important;
+  }
+}
+
+// Panel del menú móvil (overlay desde la izquierda)
+.mobile-menu-panel {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 280px;
+  max-width: 85vw;
+  height: 100vh !important;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999 !important;
+  padding: 1.5rem;
+  padding-top: calc(1.5rem + 64px); // Espacio para el header
+  overflow-y: auto;
+  animation: slideInLeft 0.3s ease-out;
+  margin: 0;
+  
+  // Dark mode
+  :host-context(.dark) &,
+  .dark & {
+    background-color: rgb(17, 24, 39);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Animación para el panel del menú
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Animación para el fade in del backdrop
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

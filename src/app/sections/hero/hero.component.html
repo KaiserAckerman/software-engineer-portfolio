@@ -1,0 +1,116 @@
+<section id="hero" class="full-viewport-section relative w-full min-h-screen flex items-center overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <!-- Elemento visual (imagen) - arriba en móvil, izquierda en desktop -->
+      <div appScrollReveal class="relative flex items-center justify-center order-1 lg:order-1">
+        <div class="hero-image-container">
+          <!-- Efecto de ruido visual -->
+          <div class="visual-noise"></div>
+
+          <!-- Marco geométrico -->
+          <div class="geometric-frame bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-50 dark:via-indigo-50 dark:to-purple-50">
+            <!-- Imagen dentro del marco -->
+            <div class="image-wrapper">
+              <img
+                src="/assets/Personal-Image.webp"
+                alt="Hero image"
+                class="hero-image"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido (texto) - abajo en móvil, derecha en desktop -->
+      <div class="text-center lg:text-left order-2 lg:order-2">
+        <p appScrollReveal class="greeting-text text-2xl md:text-3xl lg:text-4xl font-medium bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent animate-fade-in block">
+          {{ greeting() }}
+        </p>
+        <h1 appScrollReveal class="hero-name text-4xl md:text-5xl lg:text-6xl font-bold mt-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent animate-fade-in block scroll-reveal-delay-1">
+          {{ name }}
+        </h1>
+
+        <p appScrollReveal class="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-4 font-medium animate-fade-in-delay scroll-reveal-delay-2">
+          {{ profession() }}
+        </p>
+
+        <p appScrollReveal class="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-6 italic animate-fade-in-delay-2 scroll-reveal-delay-3">
+          "<app-encrypted-text
+            [text]="currentTagline()"
+            encryptedClassName="text-neutral-500"
+            [revealedClassName]="'text-gray-600 dark:text-gray-400'"
+            [revealDelayMs]="50"
+          ></app-encrypted-text>"
+        </p>
+
+        <div appScrollReveal class="hero-cta animate-fade-in-delay-3 scroll-reveal-delay-4">
+          <button class="hero-button primary" type="button" (click)="downloadCv()">
+            <span>Descargar CV</span>
+          </button>
+          <button class="hero-button secondary" type="button" (click)="openContactModal()">
+            <span>Contactarme</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de contacto -->
+  <div
+    class="contact-modal-overlay"
+    [class.active]="showContactModal()"
+    (click)="closeContactModal()">
+  </div>
+
+  <div class="contact-modal" [class.active]="showContactModal()" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Hablemos</h3>
+      <button type="button" class="close-button" (click)="closeContactModal()">&times;</button>
+    </div>
+    <p class="modal-subtitle">Déjame tus datos y me pondré en contacto contigo.</p>
+    <form #contactForm="ngForm" (ngSubmit)="submitContactForm(contactForm)" novalidate>
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          ngModel
+          placeholder="Tu nombre" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          ngModel
+          placeholder="tu@email.com" />
+      </div>
+      <div class="form-group">
+        <label for="message">Mensaje</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          required
+          ngModel
+          placeholder="Cuéntame sobre tu proyecto o idea"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="hero-button primary w-full" [disabled]="isSubmitting()">
+          {{ isSubmitting() ? 'Enviando...' : 'Enviar mensaje' }}
+        </button>
+        <button type="button" class="hero-button ghost w-full" (click)="closeContactModal()">Cancelar</button>
+      </div>
+      <div class="form-status" *ngIf="formStatus() === 'success'">
+        ¡Gracias! Te contactaré pronto.
+      </div>
+      <div class="form-status error" *ngIf="formStatus() === 'error'">
+        Por favor completa todos los campos.
+      </div>
+    </form>
+  </div>
+</section>

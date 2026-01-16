@@ -1,0 +1,38 @@
+// Estilos específicos del componente encrypted-text
+.encrypted-text-wrapper {
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  text-align: inherit;
+}
+
+.encrypted-text-char {
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  // Asegurar que no haya espaciado adicional
+  margin: 0;
+  padding: 0;
+  // Mantener el kerning natural del texto
+  text-rendering: optimizeLegibility;
+  // Asegurar que los espacios se rendericen correctamente
+  word-break: normal;
+  word-wrap: normal;
+}
+
+.encrypted-text-space {
+  display: inline;
+  // Asegurar que los espacios sean visibles y tengan el ancho correcto
+  min-width: 0.25em; // Ancho mínimo para espacios
+  white-space: pre; // Preservar espacios
+}
+

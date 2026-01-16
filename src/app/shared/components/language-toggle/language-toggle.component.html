@@ -1,0 +1,8 @@
+<button
+  (click)="toggleLanguage()"
+  class="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+  [attr.aria-label]="currentLanguage === 'es' ? 'Switch to English' : 'Cambiar a Español'"
+  [title]="currentLanguage === 'es' ? 'Switch to English' : 'Cambiar a Español'"
+>
+  <span class="text-sm font-medium">{{ currentLanguage === 'es' ? 'ES' : 'EN' }}</span>
+</button>

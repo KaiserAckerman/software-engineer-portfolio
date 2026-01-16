@@ -1,0 +1,272 @@
+.skills-section {
+  position: relative;
+  width: 100%;
+}
+
+// Botones de filtro
+.filter-button {
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  background-color: rgb(243, 244, 246);
+  color: rgb(107, 114, 128);
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgb(229, 231, 235);
+    transform: translateY(-2px);
+  }
+  
+  &.active {
+    background-color: rgb(37, 99, 235);
+    color: rgb(255, 255, 255);
+    border-color: rgb(37, 99, 235);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    
+    &:hover {
+      background-color: rgb(29, 78, 216);
+      border-color: rgb(29, 78, 216);
+    }
+  }
+  
+  // Dark mode
+  .dark & {
+    background-color: rgb(31, 41, 55);
+    color: rgb(209, 213, 219);
+    
+    &:hover {
+      background-color: rgb(55, 65, 81);
+    }
+    
+    &.active {
+      background-color: rgb(59, 130, 246);
+      border-color: rgb(59, 130, 246);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      
+      &:hover {
+        background-color: rgb(37, 99, 235);
+        border-color: rgb(37, 99, 235);
+      }
+    }
+  }
+}
+
+// Wrapper para el grid - permite centrar cuando hay pocos items
+.skills-grid-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  
+  &.centered-wrapper {
+    justify-content: center;
+  }
+}
+
+// Grid de skills - máximo 6 columnas, siempre mantiene formato grid y tamaño consistente
+.skills-grid {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  width: 100%;
+  
+  // Móvil: 2 columnas con tamaño fijo
+  @media (max-width: 639px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  // Tablet: 3 columnas con tamaño fijo
+  @media (min-width: 640px) and (max-width: 1023px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  
+  // Desktop pequeño: 4 columnas
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  
+  // Desktop mediano: 5 columnas
+  @media (min-width: 1280px) and (max-width: 1535px) {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+  }
+  
+  // Desktop grande: 6 columnas máximo
+  @media (min-width: 1536px) {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+// Card de skill
+.skill-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  border-radius: 1rem;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(229, 231, 235);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 180px;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  
+  // Limitar el ancho máximo para mantener consistencia en todas las resoluciones
+  @media (min-width: 640px) {
+    max-width: 220px;
+  }
+  
+  @media (min-width: 1024px) {
+    max-width: 240px;
+  }
+  
+  @media (min-width: 1280px) {
+    max-width: 250px;
+  }
+  
+  @media (min-width: 1536px) {
+    max-width: 260px;
+  }
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgb(37, 99, 235);
+    background-color: rgb(255, 255, 255);
+  }
+  
+  // Dark mode
+  .dark & {
+    background-color: rgb(31, 41, 55);
+    border-color: rgb(55, 65, 81);
+    
+    &:hover {
+      background-color: rgb(55, 65, 81);
+      border-color: rgb(59, 130, 246);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+    }
+  }
+}
+
+// Card de habilidad blanda (diseño diferente)
+.soft-skill-card {
+  min-height: 160px;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, rgb(249, 250, 251) 0%, rgb(243, 244, 246) 100%);
+  
+  &:hover {
+    background: linear-gradient(135deg, rgb(255, 255, 255) 0%, rgb(249, 250, 251) 100%);
+    border-color: rgb(139, 92, 246);
+    
+    .soft-skill-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+  
+  .dark & {
+    background: linear-gradient(135deg, rgb(31, 41, 55) 0%, rgb(17, 24, 39) 100%);
+    
+    &:hover {
+      background: linear-gradient(135deg, rgb(55, 65, 81) 0%, rgb(31, 41, 55) 100%);
+      border-color: rgb(167, 139, 250);
+    }
+  }
+}
+
+// Icono para habilidades blandas
+.soft-skill-icon {
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Nombre de habilidad blanda
+.soft-skill-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+// Grid específico para habilidades blandas - mismo comportamiento
+.soft-skills-grid {
+  // Hereda todos los estilos del grid principal
+  // Solo ajusta si es necesario algo específico
+}
+
+// Contenedor del icono
+.skill-icon-container {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+// Icono de la skill
+.skill-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  
+  .skill-card:hover & {
+    transform: scale(1.1);
+  }
+}
+
+// Placeholder cuando no hay icono
+.skill-icon-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(229, 231, 235);
+  border-radius: 0.5rem;
+  
+  .dark & {
+    background-color: rgb(55, 65, 81);
+  }
+}
+
+// Nombre de la skill
+.skill-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(17, 24, 39);
+  text-align: center;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  
+  .dark & {
+    color: rgb(255, 255, 255);
+  }
+}
+
+// Categoría
+.skill-category {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgb(107, 114, 128);
+  text-align: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: rgb(243, 244, 246);
+  
+  .dark & {
+    color: rgb(156, 163, 175);
+    background-color: rgb(55, 65, 81);
+  }
+}

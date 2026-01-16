@@ -1,0 +1,331 @@
+// Asegurar que las secciones ocupen todo el viewport
+.full-viewport-section {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+// Prevenir scroll horizontal
+body {
+  overflow-x: hidden;
+}
+
+// ============================================
+// ESTILOS PARA LAZY LOADING DE SECCIONES
+// ============================================
+
+.lazy-section-hidden {
+  opacity: 0;
+  transform: translateY(60px);
+  pointer-events: none;
+  visibility: hidden;
+  // Desactivar renderizado cuando está oculto para optimizar
+  will-change: opacity, transform;
+  // Optimización del navegador: no renderizar contenido fuera del viewport
+  content-visibility: hidden;
+  // Reducir consumo de recursos cuando está oculto
+  contain: layout style paint;
+}
+
+.lazy-section-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+  // Optimizar cuando está visible
+  will-change: auto;
+  // Permitir renderizado optimizado cuando está visible
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100vh;
+}
+
+// ============================================
+// ESTILOS DE FONDO GLOBAL (movidos desde hero)
+// ============================================
+
+// Animaciones de movimiento para el fondo animado
+@keyframes moveHorizontal {
+  0% {
+    transform: translateX(-50%) translateY(-10%);
+  }
+  50% {
+    transform: translateX(50%) translateY(10%);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-10%);
+  }
+}
+
+@keyframes moveInCircle {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes moveVertical {
+  0% {
+    transform: translateY(-50%);
+  }
+  50% {
+    transform: translateY(50%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+// Contenedor para las animaciones de gradiente
+.animated-gradient {
+  z-index: 0;
+  opacity: 0.7;
+  
+  .dark & {
+    opacity: 0.5;
+  }
+}
+
+// Blobs de gradiente animados
+.gradient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  
+  &.gradient-blob-1 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(99, 102, 241, 0.4));
+    top: -200px;
+    left: -200px;
+    animation: moveVertical 30s ease infinite;
+    
+    .dark & {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(99, 102, 241, 0.3));
+    }
+  }
+  
+  &.gradient-blob-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(59, 130, 246, 0.4));
+    top: 50%;
+    right: -150px;
+    animation: moveInCircle 20s reverse infinite;
+    
+    .dark & {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3));
+    }
+  }
+  
+  &.gradient-blob-3 {
+    width: 450px;
+    height: 450px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(139, 92, 246, 0.4));
+    bottom: -150px;
+    left: 30%;
+    animation: moveInCircle 40s linear infinite;
+    
+    .dark & {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+    }
+  }
+  
+  &.gradient-blob-4 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(139, 92, 246, 0.4));
+    top: 20%;
+    left: 50%;
+    animation: moveHorizontal 40s ease infinite;
+    
+    .dark & {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+    }
+  }
+  
+  &.gradient-blob-5 {
+    width: 380px;
+    height: 380px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(99, 102, 241, 0.4));
+    bottom: 10%;
+    right: 20%;
+    animation: moveInCircle 20s ease infinite;
+    
+    .dark & {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.3));
+    }
+  }
+}
+
+// Efecto de partículas/estrellas flotantes
+.stars-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  
+  // Crear múltiples capas de estrellas usando pseudo-elementos
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      // Primera capa de estrellas - más grandes y brillantes
+      radial-gradient(4px 4px at 20% 30%, rgba(96, 165, 250, 0.9), transparent),
+      radial-gradient(3px 3px at 60% 70%, rgba(129, 140, 248, 0.9), transparent),
+      radial-gradient(3px 3px at 80% 20%, rgba(167, 139, 250, 1), transparent),
+      radial-gradient(4px 4px at 40% 80%, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(3px 3px at 90% 60%, rgba(129, 140, 248, 0.9), transparent),
+      radial-gradient(2px 2px at 10% 50%, rgba(167, 139, 250, 1), transparent),
+      radial-gradient(4px 4px at 50% 90%, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(3px 3px at 30% 10%, rgba(129, 140, 248, 0.9), transparent),
+      radial-gradient(2px 2px at 70% 40%, rgba(167, 139, 250, 1), transparent),
+      radial-gradient(4px 4px at 15% 75%, rgba(96, 165, 250, 0.9), transparent),
+      radial-gradient(3px 3px at 85% 15%, rgba(129, 140, 248, 0.8), transparent),
+      radial-gradient(2px 2px at 55% 55%, rgba(167, 139, 250, 1), transparent),
+      radial-gradient(4px 4px at 25% 45%, rgba(96, 165, 250, 0.9), transparent),
+      radial-gradient(3px 3px at 75% 85%, rgba(129, 140, 248, 0.9), transparent),
+      radial-gradient(2px 2px at 45% 25%, rgba(167, 139, 250, 1), transparent),
+      radial-gradient(4px 4px at 95% 35%, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(3px 3px at 5% 65%, rgba(129, 140, 248, 0.9), transparent),
+      radial-gradient(2px 2px at 65% 5%, rgba(167, 139, 250, 1), transparent),
+      radial-gradient(4px 4px at 35% 95%, rgba(96, 165, 250, 0.9), transparent),
+      radial-gradient(3px 3px at 80% 50%, rgba(129, 140, 248, 0.8), transparent),
+      radial-gradient(3px 3px at 12% 35%, rgba(167, 139, 250, 0.9), transparent),
+      radial-gradient(4px 4px at 68% 55%, rgba(96, 165, 250, 0.9), transparent),
+      radial-gradient(2px 2px at 42% 72%, rgba(129, 140, 248, 1), transparent),
+      radial-gradient(3px 3px at 88% 28%, rgba(167, 139, 250, 0.9), transparent);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    animation: starsFloat 20s ease-in-out infinite;
+    filter: blur(0.5px);
+  }
+  
+  &::before {
+    animation-delay: 0s;
+    opacity: 1;
+  }
+  
+  &::after {
+    background-image: 
+      // Segunda capa de estrellas (más grandes para profundidad)
+      radial-gradient(5px 5px at 15% 40%, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(4px 4px at 65% 25%, rgba(129, 140, 248, 0.8), transparent),
+      radial-gradient(3px 3px at 25% 85%, rgba(167, 139, 250, 0.9), transparent),
+      radial-gradient(5px 5px at 85% 70%, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(4px 4px at 45% 15%, rgba(129, 140, 248, 0.9), transparent),
+      radial-gradient(3px 3px at 75% 45%, rgba(167, 139, 250, 0.8), transparent),
+      radial-gradient(5px 5px at 35% 60%, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(4px 4px at 95% 20%, rgba(129, 140, 248, 0.8), transparent),
+      radial-gradient(3px 3px at 55% 80%, rgba(167, 139, 250, 0.9), transparent),
+      radial-gradient(5px 5px at 10% 30%, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(4px 4px at 90% 90%, rgba(129, 140, 248, 0.8), transparent),
+      radial-gradient(3px 3px at 50% 10%, rgba(167, 139, 250, 0.9), transparent),
+      radial-gradient(4px 4px at 22% 62%, rgba(96, 165, 250, 0.8), transparent),
+      radial-gradient(5px 5px at 78% 38%, rgba(129, 140, 248, 0.9), transparent),
+      radial-gradient(3px 3px at 38% 18%, rgba(167, 139, 250, 0.8), transparent);
+    background-size: 100% 100%;
+    animation-delay: -10s;
+    opacity: 1;
+    filter: blur(0.8px);
+  }
+  
+  // Agregar efecto de brillo pulsante más intenso
+  animation: starsTwinkle 3s ease-in-out infinite;
+}
+
+// Animación de flotación suave de las estrellas
+@keyframes starsFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-10px, -15px) scale(1.05);
+  }
+  50% {
+    transform: translate(10px, -20px) scale(0.95);
+  }
+  75% {
+    transform: translate(-5px, -10px) scale(1.02);
+  }
+}
+
+// Animación de brillo pulsante más intenso
+@keyframes starsTwinkle {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// Dark mode - estrellas mucho más brillantes
+.dark {
+  .stars-background {
+    &::before,
+    &::after {
+      background-image: 
+        // Estrellas muy brillantes en dark mode
+        radial-gradient(4px 4px at 20% 30%, rgba(147, 197, 253, 1), transparent),
+        radial-gradient(3px 3px at 60% 70%, rgba(196, 181, 253, 1), transparent),
+        radial-gradient(3px 3px at 80% 20%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(4px 4px at 40% 80%, rgba(147, 197, 253, 0.95), transparent),
+        radial-gradient(3px 3px at 90% 60%, rgba(196, 181, 253, 1), transparent),
+        radial-gradient(2px 2px at 10% 50%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(4px 4px at 50% 90%, rgba(147, 197, 253, 0.95), transparent),
+        radial-gradient(3px 3px at 30% 10%, rgba(196, 181, 253, 1), transparent),
+        radial-gradient(2px 2px at 70% 40%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(4px 4px at 15% 75%, rgba(147, 197, 253, 1), transparent),
+        radial-gradient(3px 3px at 85% 15%, rgba(196, 181, 253, 0.95), transparent),
+        radial-gradient(2px 2px at 55% 55%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(4px 4px at 25% 45%, rgba(147, 197, 253, 1), transparent),
+        radial-gradient(3px 3px at 75% 85%, rgba(196, 181, 253, 1), transparent),
+        radial-gradient(2px 2px at 45% 25%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(4px 4px at 95% 35%, rgba(147, 197, 253, 0.95), transparent),
+        radial-gradient(3px 3px at 5% 65%, rgba(196, 181, 253, 1), transparent),
+        radial-gradient(2px 2px at 65% 5%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(4px 4px at 35% 95%, rgba(147, 197, 253, 1), transparent),
+        radial-gradient(3px 3px at 80% 50%, rgba(196, 181, 253, 0.95), transparent),
+        radial-gradient(3px 3px at 12% 35%, rgba(221, 214, 254, 0.95), transparent),
+        radial-gradient(4px 4px at 68% 55%, rgba(147, 197, 253, 1), transparent),
+        radial-gradient(2px 2px at 42% 72%, rgba(196, 181, 253, 1), transparent),
+        radial-gradient(3px 3px at 88% 28%, rgba(221, 214, 254, 0.95), transparent);
+      filter: blur(0.3px);
+    }
+    
+    &::after {
+      background-image: 
+        radial-gradient(5px 5px at 15% 40%, rgba(147, 197, 253, 0.95), transparent),
+        radial-gradient(4px 4px at 65% 25%, rgba(196, 181, 253, 0.95), transparent),
+        radial-gradient(3px 3px at 25% 85%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(5px 5px at 85% 70%, rgba(147, 197, 253, 0.95), transparent),
+        radial-gradient(4px 4px at 45% 15%, rgba(196, 181, 253, 1), transparent),
+        radial-gradient(3px 3px at 75% 45%, rgba(221, 214, 254, 0.95), transparent),
+        radial-gradient(5px 5px at 35% 60%, rgba(147, 197, 253, 0.95), transparent),
+        radial-gradient(4px 4px at 95% 20%, rgba(196, 181, 253, 0.95), transparent),
+        radial-gradient(3px 3px at 55% 80%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(5px 5px at 10% 30%, rgba(147, 197, 253, 0.95), transparent),
+        radial-gradient(4px 4px at 90% 90%, rgba(196, 181, 253, 0.95), transparent),
+        radial-gradient(3px 3px at 50% 10%, rgba(221, 214, 254, 1), transparent),
+        radial-gradient(4px 4px at 22% 62%, rgba(147, 197, 253, 0.95), transparent),
+        radial-gradient(5px 5px at 78% 38%, rgba(196, 181, 253, 1), transparent),
+        radial-gradient(3px 3px at 38% 18%, rgba(221, 214, 254, 0.95), transparent);
+      filter: blur(0.5px);
+    }
+  }
+}
