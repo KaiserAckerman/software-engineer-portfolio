@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
@@ -8,8 +8,8 @@ import { ProjectsComponent } from './sections/projects/projects.component';
 import { ExperienceComponent } from './sections/experience/experience.component';
 import { AvailabilityComponent } from './sections/availability/availability.component';
 import { ScrollSnapService } from './core/services/scroll-snap.service';
-import { ViewportOptimizerService } from './core/services/viewport-optimizer.service';
-import { LazySectionDirective } from './shared/directives/lazy-section.directive';
+import { LanguageService } from './core/services/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -21,21 +21,46 @@ import { LazySectionDirective } from './shared/directives/lazy-section.directive
     SkillsComponent,
     ProjectsComponent,
     ExperienceComponent,
-    AvailabilityComponent,
-    LazySectionDirective
+    AvailabilityComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private languageSubscription?: Subscription;
+
   constructor(
     private scrollSnapService: ScrollSnapService,
-    private viewportOptimizer: ViewportOptimizerService
+    private languageService: LanguageService
   ) {}
 
   ngOnInit(): void {
     // Inicializar el servicio de scroll snap
     this.scrollSnapService.initialize();
-    // El servicio de viewport optimizer se inicializa automáticamente en su constructor
+
+    // Actualizar título inicial
+    this.updatePageTitle(this.languageService.current);
+
+    // Suscribirse a cambios de idioma para actualizar el título
+    this.languageSubscription = this.languageService.language$.subscribe(lang => {
+      this.updatePageTitle(lang);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
+  }
+
+  private updatePageTitle(lang: 'es' | 'en'): void {
+    const titles = {
+      es: 'Roberto Vallejo | Ingeniero de Software',
+      en: 'Roberto Vallejo | Software Engineer'
+    };
+
+    if (typeof document !== 'undefined') {
+      document.title = titles[lang];
+    }
   }
 }

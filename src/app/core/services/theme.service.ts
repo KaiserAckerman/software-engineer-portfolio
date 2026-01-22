@@ -25,7 +25,23 @@ export class ThemeService {
   readonly theme$ = this.themeSubject.asObservable();
 
   constructor() {
-    this.applyTheme(this.themeSubject.value);
+    // Aplicar tema sin favicon primero (por si el DOM aún no está listo)
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      const theme = this.themeSubject.value;
+      root.classList.remove('light', 'dark');
+      if (theme === 'dark') {
+        root.classList.add('dark');
+      }
+    }
+
+    // Asegurar que el favicon se cargue después de que el DOM esté listo
+    if (typeof window !== 'undefined') {
+      // Usar setTimeout para asegurar que el DOM esté completamente cargado
+      setTimeout(() => {
+        this.updateFavicon(this.themeSubject.value);
+      }, 100);
+    }
   }
 
   get current(): Theme {
@@ -62,5 +78,67 @@ export class ThemeService {
       root.classList.add('dark');
     }
     // Para light mode, no necesitamos agregar clase, solo asegurarnos de que 'dark' no esté
+
+    // Actualizar favicon según el tema
+    this.updateFavicon(theme);
+  }
+
+  private updateFavicon(theme: Theme): void {
+    if (typeof document === 'undefined') return;
+
+    // Remover favicons existentes
+    const existingFavicons = document.querySelectorAll('link[rel="icon"], link[rel="alternate icon"]');
+    existingFavicons.forEach(link => link.remove());
+
+    // Colores según el tema (igual que en el header)
+    const bgColor = theme === 'dark' ? '#ffffff' : '#111827';
+    const borderColor = theme === 'dark' ? '#d1d5db' : '#374151';
+
+    // Gradiente del texto según el tema
+    let gradientColors;
+    if (theme === 'dark') {
+      // Gradiente más claro para dark mode (como en el header)
+      gradientColors = `
+        <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+        <stop offset="50%" style="stop-color:#818cf8;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1" />
+      `;
+    } else {
+      // Gradiente más oscuro para light mode (como en el header)
+      gradientColors = `
+        <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+        <stop offset="50%" style="stop-color:#6366f1;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      `;
+    }
+
+    // Crear nuevo favicon SVG dinámico
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <defs>
+          <linearGradient id="rvGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            ${gradientColors}
+          </linearGradient>
+        </defs>
+        <circle cx="32" cy="32" r="30" fill="${bgColor}" stroke="${borderColor}" stroke-width="2"/>
+        <text x="32" y="42" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="url(#rvGradient)">RV</text>
+      </svg>
+    `.trim();
+
+    // Convertir SVG a data URL
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+
+    // Crear link element para el favicon
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    link.href = url;
+
+    // Agregar al head
+    document.head.appendChild(link);
+
+    // Limpiar URL después de un momento (opcional)
+    setTimeout(() => URL.revokeObjectURL(url), 100);
   }
 }

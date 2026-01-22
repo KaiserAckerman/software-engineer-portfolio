@@ -1,3 +1,39 @@
+// Estilos para los links de navegación activos
+.nav-link {
+  position: relative;
+  
+  &.active {
+    color: rgb(37, 99, 235);
+    background-color: rgba(37, 99, 235, 0.1);
+    
+    // Dark mode
+    :host-context(.dark) &,
+    .dark & {
+      color: rgb(96, 165, 250);
+      background-color: rgba(96, 165, 250, 0.15);
+    }
+    
+    // Indicador de línea inferior
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 2px;
+      background: linear-gradient(to right, rgb(37, 99, 235), rgb(99, 102, 241), rgb(139, 92, 246));
+      border-radius: 2px;
+      
+      // Dark mode
+      :host-context(.dark) &,
+      .dark & {
+        background: linear-gradient(to right, rgb(96, 165, 250), rgb(129, 140, 248), rgb(167, 139, 250));
+      }
+    }
+  }
+}
+
 // Logo con círculo de fondo
 .logo-button {
   position: relative;

@@ -12,34 +12,6 @@ body {
   overflow-x: hidden;
 }
 
-// ============================================
-// ESTILOS PARA LAZY LOADING DE SECCIONES
-// ============================================
-
-.lazy-section-hidden {
-  opacity: 0;
-  transform: translateY(60px);
-  pointer-events: none;
-  visibility: hidden;
-  // Desactivar renderizado cuando está oculto para optimizar
-  will-change: opacity, transform;
-  // Optimización del navegador: no renderizar contenido fuera del viewport
-  content-visibility: hidden;
-  // Reducir consumo de recursos cuando está oculto
-  contain: layout style paint;
-}
-
-.lazy-section-visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-  visibility: visible;
-  // Optimizar cuando está visible
-  will-change: auto;
-  // Permitir renderizado optimizado cuando está visible
-  content-visibility: auto;
-  contain-intrinsic-size: auto 100vh;
-}
 
 // ============================================
 // ESTILOS DE FONDO GLOBAL (movidos desde hero)

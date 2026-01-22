@@ -46,7 +46,8 @@
         @for (item of navItems; track item.id) {
           <button
             (click)="scrollToSection(item.id)"
-            class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            class="nav-link px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            [class.active]="isActive(item.id)"
           >
             {{ getNavLabel(item.key) }}
           </button>
@@ -146,7 +147,8 @@
           @for (item of navItems; track item.id) {
             <button
               (click)="scrollToSection(item.id)"
-          class="px-4 py-3 text-base font-medium text-left text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+          class="nav-link px-4 py-3 text-base font-medium text-left text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              [class.active]="isActive(item.id)"
             >
               {{ getNavLabel(item.key) }}
             </button>

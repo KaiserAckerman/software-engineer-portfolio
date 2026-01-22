@@ -50,5 +50,19 @@ export class LanguageService {
   private applyLanguage(lang: Language): void {
     if (typeof document === 'undefined') return;
     document.documentElement.lang = lang;
+    
+    // Actualizar el título de la página según el idioma
+    this.updatePageTitle(lang);
+  }
+
+  private updatePageTitle(lang: Language): void {
+    if (typeof document === 'undefined') return;
+    
+    const titles = {
+      es: 'Roberto Vallejo | Ingeniero de Software',
+      en: 'Roberto Vallejo | Software Engineer'
+    };
+    
+    document.title = titles[lang];
   }
 }

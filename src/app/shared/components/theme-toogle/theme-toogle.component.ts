@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../../core/services/theme.service';
 
@@ -9,18 +9,40 @@ import { ThemeService } from '../../../core/services/theme.service';
   styleUrl: './theme-toogle.component.scss'
 })
 export class ThemeToogleComponent implements OnInit {
-  currentTheme: 'light' | 'dark' = 'light';
+  // Leer el tema inicial directamente del localStorage o preferencia del sistema
+  // para evitar el flash visual
+  currentTheme = signal<'light' | 'dark'>(this.getInitialTheme());
 
   constructor(private themeService: ThemeService) {}
 
   ngOnInit(): void {
-    this.currentTheme = this.themeService.current;
+    // Sincronizar con el servicio
+    this.currentTheme.set(this.themeService.current);
+    
+    // Suscribirse a cambios del tema
     this.themeService.theme$.subscribe(theme => {
-      this.currentTheme = theme;
+      this.currentTheme.set(theme);
     });
   }
 
   toggleTheme(): void {
     this.themeService.toggle();
+  }
+
+  private getInitialTheme(): 'light' | 'dark' {
+    // Leer directamente del localStorage para evitar delay
+    if (typeof window === 'undefined') return 'light';
+    
+    const stored = localStorage.getItem('app_theme');
+    if (stored === 'light' || stored === 'dark') {
+      return stored;
+    }
+    
+    // Si no hay preferencia guardada, usar la preferencia del sistema
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    
+    return 'light';
   }
 }

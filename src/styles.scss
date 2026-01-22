@@ -8,7 +8,7 @@
     overflow-x: hidden;
     height: 100%;
   }
-  
+
   body {
     @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
     overflow-x: hidden;
@@ -16,7 +16,7 @@
     margin: 0;
     padding: 0;
   }
-  
+
   // Mejorar la suavidad del scroll
   * {
     -webkit-overflow-scrolling: touch;
@@ -56,4 +56,14 @@
 
 .scroll-reveal-delay-5 {
   transition-delay: 0.5s;
+}
+
+// Ajuste de scroll para compensar el navbar sticky
+// Esto asegura que cuando se hace scroll a una sección, el navbar no la cubra
+#hero,
+#skills,
+#projects,
+#experience,
+#availability {
+  scroll-margin-top: 4rem; // 64px (altura del navbar h-16)
 }
