@@ -72,7 +72,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const navbarHeight = 64; // h-16 = 64px
     const options: IntersectionObserverInit = {
       root: null,
-      rootMargin: `-${navbarHeight}px 0px -50% 0px`, // Zona más estricta para evitar cambios rápidos
+      rootMargin: `-${navbarHeight}px 0px -25% 0px`, // Zona menos estricta para mejor detección
       threshold: [0, 0.25, 0.5, 0.75, 1]
     };
 
@@ -85,7 +85,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       // Debounce: esperar un poco antes de actualizar para evitar cambios rápidos
       this.updateTimeout = window.setTimeout(() => {
         this.updateActiveSection(entries, navbarHeight);
-      }, 50); // 50ms de debounce
+      }, 25); // 25ms de debounce
     }, options);
 
     // Observar todas las secciones
@@ -150,9 +150,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (newSectionId !== currentSectionId) {
         const timeSinceLastUpdate = currentTime - this.lastUpdateTime;
 
-        // Si ha pasado menos de 200ms desde la última actualización,
+        // Si ha pasado menos de 100ms desde la última actualización,
         // solo cambiar si la nueva sección está claramente más cerca del top
-        if (timeSinceLastUpdate < 200) {
+        if (timeSinceLastUpdate < 100) {
           const currentSectionMatch = matches.find(m => m.id === currentSectionId);
           if (currentSectionMatch) {
             // Solo cambiar si la nueva sección está significativamente mejor
@@ -172,8 +172,48 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private handleScroll(): void {
     // Si estamos muy arriba, asegurar que hero esté activo
-    if (window.scrollY < 100) {
+    if (window.scrollY < 200) {
       this.activeSection.set('hero');
+      this.lastUpdateTime = Date.now();
+    }
+  }
+
+  private forceUpdateActiveSection(): void {
+    const navbarHeight = 64;
+    let closestSection = 'hero';
+    let bestAdjustedTop = Infinity;
+
+    // Primero, buscar la sección que está más arriba y visible (adjustedTop >= 0)
+    this.navItems.forEach(item => {
+      const element = document.getElementById(item.id);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        const adjustedTop = rect.top - navbarHeight;
+        if (adjustedTop >= 0 && adjustedTop < bestAdjustedTop) {
+          bestAdjustedTop = adjustedTop;
+          closestSection = item.id;
+        }
+      }
+    });
+
+    // Si ninguna sección está visible desde arriba, elegir la más cercana desde arriba
+    if (bestAdjustedTop === Infinity) {
+      this.navItems.forEach(item => {
+        const element = document.getElementById(item.id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const adjustedTop = rect.top - navbarHeight;
+          if (adjustedTop < bestAdjustedTop) {
+            bestAdjustedTop = adjustedTop;
+            closestSection = item.id;
+          }
+        }
+      });
+    }
+
+    // Solo actualizar si es diferente
+    if (closestSection !== this.activeSection()) {
+      this.activeSection.set(closestSection);
       this.lastUpdateTime = Date.now();
     }
   }
@@ -193,6 +233,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Después del scroll, esperar un poco y forzar la actualización de la sección activa
+      setTimeout(() => {
+        this.forceUpdateActiveSection();
+      }, 600); // Esperar 600ms para que el scroll termine
     }
   }
 
