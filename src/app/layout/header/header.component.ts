@@ -30,6 +30,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private updateTimeout?: number;
   private lastUpdateTime = 0;
 
+  // Guard para evitar abrir el mismo link dos veces en rápida sucesión
+  private lastLinkOpen: { url: string; time: number } | null = null;
+
   navItems = [
     { id: 'hero', key: 'home' as const },
     { id: 'skills', key: 'skills' as const },
@@ -245,10 +248,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isMenuOpen.set(!this.isMenuOpen());
   }
 
-  openSocialLink(url: string): void {
-    // Preferir abrir la composición de Gmail en escritorio.
-    // En móviles usar `mailto:` para que el cliente nativo se encargue.
+  openSocialLink(url: string, event?: MouseEvent): void {
+    // Prevenir comportamiento por defecto y bubbling que puedan causar navegación doble
+    try {
+      event?.preventDefault();
+      event?.stopPropagation();
+    } catch (e) {
+      // ignore
+    }
+
     if (typeof window === 'undefined') return;
+
+    // Evitar doble apertura si se hace click rápidamente sobre el mismo link
+    const now = Date.now();
+    if (this.lastLinkOpen && this.lastLinkOpen.url === url && now - this.lastLinkOpen.time < 500) {
+      return;
+    }
+    this.lastLinkOpen = { url, time: now };
 
     try {
       if (url?.toLowerCase().startsWith('mailto:')) {
@@ -279,6 +295,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
       // Default: abrir enlaces externos en nueva pestaña
       const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      // Solo usar fallback (reemplazar la pestaña actual) si window.open fue bloqueado
       if (!opened) window.location.href = url;
     } catch (err) {
       // En caso raro de error, hacer fallback simple
