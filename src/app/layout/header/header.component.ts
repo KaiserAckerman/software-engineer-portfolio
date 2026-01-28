@@ -246,6 +246,43 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   openSocialLink(url: string): void {
-    window.open(url, '_blank', 'noopener,noreferrer');
+    // Preferir abrir la composición de Gmail en escritorio.
+    // En móviles usar `mailto:` para que el cliente nativo se encargue.
+    if (typeof window === 'undefined') return;
+
+    try {
+      if (url?.toLowerCase().startsWith('mailto:')) {
+        const mail = url.replace(/^mailto:/i, '');
+        const [toPart, queryString] = mail.split('?');
+        const to = toPart || '';
+
+        // Construir URL de composición de Gmail y mapear parámetros comunes
+        let gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}`;
+        if (queryString) {
+          const params = new URLSearchParams(queryString);
+          if (params.get('subject')) gmailUrl += `&su=${encodeURIComponent(params.get('subject')!)}`;
+          if (params.get('body')) gmailUrl += `&body=${encodeURIComponent(params.get('body')!)}`;
+          if (params.get('cc')) gmailUrl += `&cc=${encodeURIComponent(params.get('cc')!)}`;
+          if (params.get('bcc')) gmailUrl += `&bcc=${encodeURIComponent(params.get('bcc')!)}`;
+        }
+
+        const isMobile = typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const target = isMobile ? url : gmailUrl;
+
+        const opened = window.open(target, '_blank', 'noopener,noreferrer');
+        // Si el popup fue bloqueado, usar fallback a mailto (reemplaza la página actual)
+        if (!opened) {
+          window.location.href = url; // fallback: abrir mailto en el navegador
+        }
+        return;
+      }
+
+      // Default: abrir enlaces externos en nueva pestaña
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      if (!opened) window.location.href = url;
+    } catch (err) {
+      // En caso raro de error, hacer fallback simple
+      window.location.href = url;
+    }
   }
 }

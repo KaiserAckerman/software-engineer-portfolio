@@ -73,14 +73,57 @@ export class HeroComponent implements OnInit {
     }
 
     this.isSubmitting.set(true);
-    setTimeout(() => {
-      this.isSubmitting.set(false);
-      this.formStatus.set('success');
-      form.resetForm();
+
+    // Construir payload (incluye form-name para Netlify)
+    const payload: Record<string, any> = {
+      'form-name': 'contact',
+      ...form.value
+    };
+
+    const encode = (data: Record<string, any>) =>
+      Object.keys(data)
+        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(data[k] ?? '')}`)
+        .join('&');
+
+    // Solo en navegador intentamos enviar a Netlify mediante fetch
+    if (isPlatformBrowser(this.platformId) && typeof window !== 'undefined') {
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encode(payload)
+      })
+        .then(response => {
+          if (response.ok) {
+            this.isSubmitting.set(false);
+            this.formStatus.set('success');
+            form.resetForm();
+            setTimeout(() => {
+              this.closeContactModal();
+              this.formStatus.set('idle');
+            }, 1200);
+          } else {
+            // Fallback a comportamiento simulado si la request falla
+            this.isSubmitting.set(false);
+            this.formStatus.set('error');
+          }
+        })
+        .catch(() => {
+          // En caso de error de red, fallback al comportamiento anterior
+          this.isSubmitting.set(false);
+          this.formStatus.set('error');
+        });
+    } else {
+      // SSR o entorno no-browser: mantener simulación local
+      this.isSubmitting.set(true);
       setTimeout(() => {
-        this.closeContactModal();
-        this.formStatus.set('idle');
+        this.isSubmitting.set(false);
+        this.formStatus.set('success');
+        form.resetForm();
+        setTimeout(() => {
+          this.closeContactModal();
+          this.formStatus.set('idle');
+        }, 1200);
       }, 1200);
-    }, 1200);
+    }
   }
 }

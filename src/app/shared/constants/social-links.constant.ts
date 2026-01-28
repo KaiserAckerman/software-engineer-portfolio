@@ -6,24 +6,29 @@ export interface SocialLink {
 
 export const socialLinks: SocialLink[] = [
   {
-    name: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/tu-perfil',
-    icon: 'linkedin'
-  },
-  {
     name: 'GitHub',
-    url: 'https://github.com/tu-usuario',
+    url: 'https://github.com/KaiserAckerman',
     icon: 'github'
   },
   {
-    name: 'Twitter',
-    url: 'https://twitter.com/tu-usuario',
-    icon: 'twitter'
+    name: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/roberto-vallejo-9254b5286/',
+    icon: 'linkedin'
+  },
+  {
+    name: 'TikTok',
+    url: 'https://www.tiktok.com/@robertodev_',
+    icon: 'tiktok'
+  },
+  {
+    name: 'WhatsApp',
+    url: 'https://wa.me/9984956818',
+    icon: 'whatsapp'
   },
   {
     name: 'Email',
-    url: 'mailto:tu-email@ejemplo.com',
-    icon: 'email'
+    url: 'mailto:robertodev2002@gmail.com',
+    icon: 'mail'
   }
 ];
 

@@ -68,7 +68,14 @@
       <button type="button" class="close-button" (click)="closeContactModal()">&times;</button>
     </div>
     <p class="modal-subtitle">Déjame tus datos y me pondré en contacto contigo.</p>
-    <form #contactForm="ngForm" (ngSubmit)="submitContactForm(contactForm)" novalidate>
+    <form name="contact" method="POST" data-netlify="true" netlify netlify-honeypot="bot-field" #contactForm="ngForm" (ngSubmit)="submitContactForm(contactForm)" novalidate>
+      <!-- Netlify required hidden input -->
+      <input type="hidden" name="form-name" value="contact" />
+      <!-- Honeypot para bots (oculto) -->
+      <p class="hidden">
+        <label>Don’t fill this out: <input name="bot-field" ngModel /></label>
+      </p>
+
       <div class="form-group">
         <label for="name">Nombre</label>
         <input
