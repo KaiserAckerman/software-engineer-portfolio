@@ -30,6 +30,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private updateTimeout?: number;
   private lastUpdateTime = 0;
 
+  // rAF + throttle para evaluación determinista del activeSection
+  private rafId?: number;
+  private evaluateThrottle = 100; // ms mínimo entre evaluaciones visibles (ajustable)
+  private lastEvaluate = 0;
+
+  // Guard para manejo de scroll programático (click en nav -> smooth scroll)
+  private isProgrammaticScroll = false;
+  private programmaticTarget: string | null = null;
+  private programmaticScrollTimeout?: number;
+  private lastScrollY = 0;
+
   // Guard para evitar abrir el mismo link dos veces en rápida sucesión
   private lastLinkOpen: { url: string; time: number } | null = null;
 
@@ -69,6 +80,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.updateTimeout) {
       clearTimeout(this.updateTimeout);
     }
+    if (this.programmaticScrollTimeout) {
+      clearTimeout(this.programmaticScrollTimeout);
+    }
+    if (this.rafId) cancelAnimationFrame(this.rafId);
   }
 
   private initializeIntersectionObserver(): void {
@@ -106,21 +121,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private updateActiveSection(entries: IntersectionObserverEntry[], navbarHeight: number): void {
+    // Si estamos en scroll programático, ignorar actualizaciones de IO temporalmente
+    if (this.isProgrammaticScroll) {
+      return;
+    }
+
     const currentTime = Date.now();
     const matches: SectionMatch[] = [];
 
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const rect = entry.boundingClientRect;
-        // Calcular la distancia desde el top del viewport (después del navbar)
         const topPosition = rect.top - navbarHeight;
 
-        // Solo considerar secciones que están en la parte superior del viewport
-        // y que tienen al menos un 20% de visibilidad
         if (topPosition <= 200 && entry.intersectionRatio >= 0.2) {
           const visibleRatio = entry.intersectionRatio;
-          // Priorizar secciones más cercanas al top y con mayor visibilidad
-          // Penalizar secciones que están muy abajo
           const score = visibleRatio * (1 / (1 + Math.max(0, topPosition) / 50));
 
           matches.push({
@@ -132,15 +147,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Si encontramos secciones válidas, elegir la mejor
     if (matches.length > 0) {
-      // Ordenar: primero por distancia al top (menor es mejor), luego por ratio
       matches.sort((a, b) => {
-        // Si una está significativamente más cerca del top, elegirla
         if (Math.abs(a.distance - b.distance) > 50) {
           return a.distance - b.distance;
         }
-        // Si están a similar distancia, elegir la más visible
         return b.ratio - a.ratio;
       });
 
@@ -148,24 +159,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const newSectionId = bestMatch.id;
       const currentSectionId = this.activeSection();
 
-      // Solo actualizar si es diferente y ha pasado suficiente tiempo desde la última actualización
-      // Esto previene cambios muy rápidos entre secciones
       if (newSectionId !== currentSectionId) {
         const timeSinceLastUpdate = currentTime - this.lastUpdateTime;
 
-        // Si ha pasado menos de 100ms desde la última actualización,
-        // solo cambiar si la nueva sección está claramente más cerca del top
-        if (timeSinceLastUpdate < 100) {
+        // Detección de scroll brusco: si el cambio de scrollY es grande, permitir cambio inmediato
+        const scrollDelta = Math.abs(window.scrollY - this.lastScrollY);
+        const isBruscoScroll = scrollDelta > 500;
+
+        if (timeSinceLastUpdate < 100 && !isBruscoScroll) {
           const currentSectionMatch = matches.find(m => m.id === currentSectionId);
-          if (currentSectionMatch) {
-            // Solo cambiar si la nueva sección está significativamente mejor
-            if (bestMatch.distance < currentSectionMatch.distance - 30) {
-              this.activeSection.set(newSectionId);
-              this.lastUpdateTime = currentTime;
-            }
+          if (currentSectionMatch && bestMatch.distance < currentSectionMatch.distance - 30) {
+            this.activeSection.set(newSectionId);
+            this.lastUpdateTime = currentTime;
           }
         } else {
-          // Si ha pasado suficiente tiempo, actualizar normalmente
           this.activeSection.set(newSectionId);
           this.lastUpdateTime = currentTime;
         }
@@ -174,11 +181,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private handleScroll(): void {
+    // Registrar posición actual para detectar scroll brusco
+    this.lastScrollY = window.scrollY;
+
+    // Si estamos en scroll programático, mantener el timeout vivo
+    if (this.isProgrammaticScroll) {
+      if (this.programmaticScrollTimeout) clearTimeout(this.programmaticScrollTimeout);
+      // Considerar el scroll terminado después de 350ms sin eventos
+      this.programmaticScrollTimeout = window.setTimeout(() => {
+        this.endProgrammaticScroll();
+      }, 350);
+      return;
+    }
+
     // Si estamos muy arriba, asegurar que hero esté activo
     if (window.scrollY < 200) {
       this.activeSection.set('hero');
       this.lastUpdateTime = Date.now();
+      this.lastScrollY = window.scrollY;
+      return;
     }
+
+    this.lastScrollY = window.scrollY;
   }
 
   private forceUpdateActiveSection(): void {
@@ -232,15 +256,46 @@ export class HeaderComponent implements OnInit, OnDestroy {
   scrollToSection(sectionId: string): void {
     this.isMenuOpen.set(false);
 
-    // Solución simple: buscar el elemento y hacer scroll directamente
     const element = document.getElementById(sectionId);
     if (element) {
+      // Marcar como scroll programático para evitar transient glitches
+      this.isProgrammaticScroll = true;
+      this.programmaticTarget = sectionId;
+      this.lastScrollY = window.scrollY;
+
+      // Establecer optimistamente la sección objetivo en el nav
+      this.activeSection.set(sectionId);
+      this.lastUpdateTime = Date.now();
+
+      // Hacer el scroll suave
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      // Después del scroll, esperar un poco y forzar la actualización de la sección activa
-      setTimeout(() => {
-        this.forceUpdateActiveSection();
-      }, 600); // Esperar 600ms para que el scroll termine
+      // Timeout para finalizar scroll programático (fallback si no hay eventos)
+      if (this.programmaticScrollTimeout) clearTimeout(this.programmaticScrollTimeout);
+      this.programmaticScrollTimeout = window.setTimeout(() => {
+        this.endProgrammaticScroll();
+      }, 900);
+    }
+  }
+
+  /**
+   * Finalizar scroll programático: permitir evaluaciones normales y forzar última verificación
+   */
+  private endProgrammaticScroll(): void {
+    if (this.programmaticScrollTimeout) {
+      clearTimeout(this.programmaticScrollTimeout);
+      this.programmaticScrollTimeout = undefined;
+    }
+    this.isProgrammaticScroll = false;
+    const target = this.programmaticTarget;
+    this.programmaticTarget = null;
+
+    // Forzar evaluación determinista basada en posición actual
+    this.forceUpdateActiveSection();
+
+    // Si aún no estamos en la sección objetivo, asegurarla
+    if (target && this.activeSection() !== target) {
+      this.activeSection.set(target);
     }
   }
 
