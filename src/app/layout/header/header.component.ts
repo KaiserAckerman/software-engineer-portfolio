@@ -46,10 +46,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   navItems = [
     { id: 'hero', key: 'home' as const },
-    { id: 'skills', key: 'skills' as const },
     { id: 'projects', key: 'projects' as const },
+    { id: 'about', key: 'about' as const },
     { id: 'experience', key: 'experience' as const },
-    { id: 'availability', key: 'availability' as const }
+    { id: 'contact', key: 'contact' as const }
   ];
 
   constructor(
@@ -249,7 +249,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.activeSection() === sectionId;
   }
 
-  getNavLabel(key: 'home' | 'skills' | 'projects' | 'experience' | 'availability'): string {
+  getNavLabel(key: 'home' | 'projects' | 'about' | 'experience' | 'contact'): string {
     return translations[this.currentLanguage()].header[key];
   }
 

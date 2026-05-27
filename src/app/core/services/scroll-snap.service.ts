@@ -12,11 +12,11 @@ export class ScrollSnapService {
       // Enable scroll snap on the main element
       const mainElement = document.querySelector('main');
       if (mainElement) {
-        mainElement.style.scrollSnapType = 'y mandatory';
-        mainElement.style.scrollBehavior = 'smooth';
+        // proximity evita pelear con scroll-behavior: smooth del documento
+        mainElement.style.scrollSnapType = 'y proximity';
 
         // Add snap-align to sections
-        const sections = mainElement.querySelectorAll('app-hero, app-skills, app-projects, app-experience, app-availability');
+        const sections = mainElement.querySelectorAll('app-projects, app-about, app-experience, app-contact');
         sections.forEach(section => {
           (section as HTMLElement).style.scrollSnapAlign = 'start';
         });

@@ -17,6 +17,12 @@ body {
 // ESTILOS DE FONDO GLOBAL (movidos desde hero)
 // ============================================
 
+.global-background {
+  contain: layout style;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 // Animaciones de movimiento para el fondo animado
 @keyframes moveHorizontal {
   0% {
@@ -58,18 +64,23 @@ body {
 .animated-gradient {
   z-index: 0;
   opacity: 0.7;
-  
+  transform: translateZ(0);
+  isolation: isolate;
+
   .dark & {
     opacity: 0.5;
   }
 }
 
-// Blobs de gradiente animados
+// Blobs de gradiente animados (blur reducido: menos coste de pintado por píxel)
 .gradient-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(48px);
   pointer-events: none;
+  transform: translateZ(0);
+  contain: layout style paint;
+  will-change: transform;
   
   &.gradient-blob-1 {
     width: 500px;
@@ -133,6 +144,14 @@ body {
     
     .dark & {
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.3));
+    }
+  }
+
+  // En desktop solo 3 blobs (menos capas con blur animado)
+  &.gradient-blob-4,
+  &.gradient-blob-5 {
+    @media (min-width: 1024px) {
+      display: none;
     }
   }
 }
@@ -299,5 +318,46 @@ body {
         radial-gradient(3px 3px at 38% 18%, rgba(221, 214, 254, 0.95), transparent);
       filter: blur(0.5px);
     }
+  }
+}
+
+// Desktop grande: blobs estáticos (mismo look, sin repintar cada frame)
+@media (min-width: 1024px) {
+  .gradient-blob {
+    animation: none !important;
+    filter: blur(40px);
+    will-change: auto;
+  }
+
+  .stars-background {
+    animation: none;
+
+    &::after {
+      display: none;
+    }
+
+    &::before {
+      animation: none;
+      filter: none;
+    }
+  }
+}
+
+// Pausar animaciones de fondo mientras el usuario hace scroll
+html.perf-pause-bg {
+  .gradient-blob,
+  .stars-background,
+  .stars-background::before,
+  .stars-background::after {
+    animation-play-state: paused !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-blob,
+  .stars-background,
+  .stars-background::before,
+  .stars-background::after {
+    animation: none !important;
   }
 }

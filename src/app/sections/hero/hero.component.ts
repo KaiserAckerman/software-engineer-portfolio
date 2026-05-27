@@ -1,10 +1,12 @@
-import { Component, OnInit, signal, computed, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LanguageService } from '../../core/services/language.service';
 import { translations } from '../../shared/constants/translations.constant';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
 import { EncryptedTextComponent } from '../../shared/components/encrypted-text/encrypted-text.component';
+import { ContactModalService } from '../../core/services/contact-modal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hero',
@@ -12,7 +14,7 @@ import { EncryptedTextComponent } from '../../shared/components/encrypted-text/e
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.scss'
 })
-export class HeroComponent implements OnInit {
+export class HeroComponent implements OnInit, OnDestroy {
   currentLanguage = signal<'es' | 'en'>('es');
 
   // Datos del hero
@@ -33,9 +35,11 @@ export class HeroComponent implements OnInit {
   showContactModal = signal(false);
   isSubmitting = signal(false);
   formStatus = signal<'idle' | 'success' | 'error'>('idle');
+  private contactModalSubscription?: Subscription;
 
   constructor(
     private languageService: LanguageService,
+    private contactModalService: ContactModalService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -44,6 +48,14 @@ export class HeroComponent implements OnInit {
     this.languageService.language$.subscribe(lang => {
       this.currentLanguage.set(lang);
     });
+
+    this.contactModalSubscription = this.contactModalService.openRequested$.subscribe(() => {
+      this.openContactModal();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.contactModalSubscription?.unsubscribe();
   }
 
   openContactModal(): void {

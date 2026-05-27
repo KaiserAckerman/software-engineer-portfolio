@@ -1,0 +1,69 @@
+<section id="about" appScrollReveal class="full-viewport-section w-full min-h-screen py-12 md:py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col justify-center flex-1">
+
+    <!-- Título -->
+    <div class="text-center mb-10 md:mb-14">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+        {{ title }}
+      </h2>
+      <p class="text-gray-500 dark:text-gray-400 text-lg">{{ subtitle }}</p>
+    </div>
+
+    <!-- Bio + foto (dos columnas en desktop) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12 items-center">
+      <!-- Texto bio -->
+      <div class="space-y-4">
+        <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed">
+          {{ bio1 }}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed">
+          {{ bio2 }}
+        </p>
+      </div>
+
+      <!-- Tarjetas de valores -->
+      <div class="grid grid-cols-1 gap-4">
+        @for (v of values; track v.es) {
+          <div class="about-value-card flex items-start gap-4 bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="flex-shrink-0 w-11 h-11 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="v.icon"></path>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-0.5">{{ getValueLabel(v) }}</h4>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ getValueDesc(v) }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Stack tecnológico -->
+    <div class="mb-10">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-5 text-center">{{ techTitle }}</h3>
+      <div class="flex flex-wrap justify-center gap-3">
+        @for (tech of techStack; track tech.name) {
+          <div class="tech-chip flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 shadow-sm">
+            <img [src]="tech.icon" [alt]="tech.name" class="w-5 h-5 object-contain" onerror="this.style.display='none'" />
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ tech.name }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Soft skills -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-5 text-center">{{ softTitle }}</h3>
+      <div class="flex flex-wrap justify-center gap-3">
+        @for (skill of softSkills; track skill.es) {
+          <span class="soft-chip inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 border border-blue-100 dark:border-gray-600 rounded-full px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span>{{ skill.icon }}</span>
+            {{ getSoftSkillLabel(skill) }}
+          </span>
+        }
+      </div>
+    </div>
+
+  </div>
+</section>

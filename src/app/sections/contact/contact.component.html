@@ -1,18 +1,13 @@
-<section id="availability" appScrollReveal class="full-viewport-section w-full min-h-screen py-8 md:py-12">
+<section id="contact" appScrollReveal class="full-viewport-section w-full min-h-screen py-8 md:py-12">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col justify-center flex-1">
-    <!-- Título -->
-    <div appScrollReveal class="text-center mb-8 md:mb-12">
+    <div class="text-center mb-8 md:mb-12">
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-        Disponibilidad
+        {{ title }}
       </h2>
-      <p class="text-gray-600 dark:text-gray-300 text-lg">
-        Estoy abierto a nuevas oportunidades
-      </p>
+      <p class="text-gray-600 dark:text-gray-300 text-lg">{{ subtitle }}</p>
     </div>
 
-    <!-- Card Principal -->
-    <div appScrollReveal class="bg-white dark:bg-gray-800 rounded-2xl p-8 md:p-12 shadow-xl">
-      <!-- Estado Actual -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 md:p-12 shadow-xl">
       <div class="flex items-center justify-center gap-4 mb-6">
         <div class="relative">
           <div class="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-75"></div>
@@ -23,12 +18,11 @@
           </div>
         </div>
         <div>
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Disponible</h3>
-          <p class="text-gray-600 dark:text-gray-300">Buscando nuevas oportunidades</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ availableLabel }}</h3>
+          <p class="text-gray-600 dark:text-gray-300">{{ availableDesc }}</p>
         </div>
       </div>
 
-      <!-- Información -->
       <div class="space-y-6 mb-8">
         <div class="flex items-start gap-4">
           <div class="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
@@ -37,8 +31,8 @@
             </svg>
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Tipo de Trabajo</h4>
-            <p class="text-gray-600 dark:text-gray-300">Remoto · Híbrido · Presencial</p>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">{{ workTypeLabel }}</h4>
+            <p class="text-gray-600 dark:text-gray-300">{{ workTypeDesc }}</p>
           </div>
         </div>
 
@@ -49,8 +43,8 @@
             </svg>
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Tiempo de Respuesta</h4>
-            <p class="text-gray-600 dark:text-gray-300">Generalmente respondo dentro de 24 horas</p>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">{{ responseLabel }}</h4>
+            <p class="text-gray-600 dark:text-gray-300">{{ responseDesc }}</p>
           </div>
         </div>
 
@@ -61,19 +55,20 @@
             </svg>
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Disponibilidad Inmediata</h4>
-            <p class="text-gray-600 dark:text-gray-300">Listo para empezar en nuevos proyectos</p>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">{{ immediateLabel }}</h4>
+            <p class="text-gray-600 dark:text-gray-300">{{ immediateDesc }}</p>
           </div>
         </div>
       </div>
 
-      <!-- CTA -->
       <div class="text-center pt-6 border-t border-gray-200 dark:border-gray-700">
-        <p class="text-gray-600 dark:text-gray-300 mb-4">
-          ¿Tienes un proyecto en mente? ¡Hablemos!
-        </p>
-        <button class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105">
-          Contactar
+        <p class="text-gray-600 dark:text-gray-300 mb-4">{{ ctaText }}</p>
+        <button
+          type="button"
+          (click)="openContactModal()"
+          class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105"
+        >
+          {{ contactButtonLabel }}
         </button>
       </div>
     </div>
