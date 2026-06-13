@@ -1,0 +1,113 @@
+@if (open && project) {
+  <div
+    class="project-detail-modal__overlay"
+    (click)="onOverlayClick()"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="project-detail-modal__panel"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="titleId"
+    (click)="onPanelClick($event)"
+  >
+    <div class="project-detail-modal__hero">
+      @if (project.image) {
+        <img
+          [src]="project.image"
+          [alt]="getTitle()"
+          class="project-detail-modal__hero-image"
+        />
+      } @else {
+        <div
+          class="project-detail-modal__hero-gradient bg-gradient-to-br"
+          [ngClass]="project.gradient"
+        >
+          <svg class="project-detail-modal__hero-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="iconPath"></path>
+          </svg>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="project-detail-modal__close"
+        (click)="close()"
+        [attr.aria-label]="language === 'es' ? 'Cerrar' : 'Close'"
+      >
+        &times;
+      </button>
+    </div>
+
+  <div class="project-detail-modal__body">
+    <div class="project-detail-modal__title-row">
+      <h2 [id]="titleId" class="project-detail-modal__title">{{ getTitle() }}</h2>
+      @if (project.year) {
+        <span class="project-detail-modal__year">{{ project.year }}</span>
+      }
+    </div>
+
+    <span class="project-detail-modal__badge project-detail-modal__badge--production">
+      {{ labels.badgeInProduction }}
+    </span>
+
+    @if (getRole()) {
+      <section class="project-detail-modal__section">
+        <h3 class="project-detail-modal__section-label">{{ labels.modalRole }}</h3>
+        <p class="project-detail-modal__text">{{ getRole() }}</p>
+      </section>
+    }
+
+    @if (getContext()) {
+      <section class="project-detail-modal__section">
+        <h3 class="project-detail-modal__section-label">{{ labels.modalContext }}</h3>
+        <p class="project-detail-modal__text">{{ getContext() }}</p>
+      </section>
+    }
+
+    @if (getContributions().length) {
+      <section class="project-detail-modal__section">
+        <h3 class="project-detail-modal__section-label">{{ labels.modalContributions }}</h3>
+        <ul class="project-detail-modal__list">
+          @for (item of getContributions(); track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section class="project-detail-modal__section">
+      <h3 class="project-detail-modal__section-label">{{ labels.modalTechnologies }}</h3>
+      <div class="project-detail-modal__tags">
+        @for (tech of project.technologies; track tech) {
+          <span class="project-detail-modal__tag">{{ tech }}</span>
+        }
+      </div>
+    </section>
+
+    <div class="project-detail-modal__actions">
+      @if (project.link) {
+        <a
+          [href]="project.link"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="project-detail-modal__btn project-detail-modal__btn--primary"
+        >
+          {{ labels.visitSite }}
+        </a>
+      }
+      @if (project.github) {
+        <a
+          [href]="project.github"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="project-detail-modal__btn project-detail-modal__btn--secondary"
+        >
+          {{ labels.viewGithub }}
+        </a>
+      }
+    </div>
+  </div>
+  </div>
+}

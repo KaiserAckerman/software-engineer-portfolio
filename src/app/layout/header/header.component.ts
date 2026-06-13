@@ -7,6 +7,7 @@ import { LanguageToggleComponent } from '../../shared/components/language-toggle
 import { ThemeToogleComponent } from '../../shared/components/theme-toogle/theme-toogle.component';
 import { translations } from '../../shared/constants/translations.constant';
 import { socialLinks } from '../../shared/constants/social-links.constant';
+import { openSocialLink } from '../../shared/utils/social-link.util';
 
 interface SectionMatch {
   id: string;
@@ -41,8 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private programmaticScrollTimeout?: number;
   private lastScrollY = 0;
 
-  // Guard para evitar abrir el mismo link dos veces en rápida sucesión
-  private lastLinkOpen: { url: string; time: number } | null = null;
+  // Guard para evitar abrir el mismo link dos veces en rápida sucesión — ver social-link.util
 
   navItems = [
     { id: 'hero', key: 'home' as const },
@@ -303,58 +303,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isMenuOpen.set(!this.isMenuOpen());
   }
 
-  openSocialLink(url: string, event?: MouseEvent): void {
-    // Prevenir comportamiento por defecto y bubbling que puedan causar navegación doble
-    try {
-      event?.preventDefault();
-      event?.stopPropagation();
-    } catch (e) {
-      // ignore
-    }
-
-    if (typeof window === 'undefined') return;
-
-    // Evitar doble apertura si se hace click rápidamente sobre el mismo link
-    const now = Date.now();
-    if (this.lastLinkOpen && this.lastLinkOpen.url === url && now - this.lastLinkOpen.time < 500) {
-      return;
-    }
-    this.lastLinkOpen = { url, time: now };
-
-    try {
-      if (url?.toLowerCase().startsWith('mailto:')) {
-        const mail = url.replace(/^mailto:/i, '');
-        const [toPart, queryString] = mail.split('?');
-        const to = toPart || '';
-
-        // Construir URL de composición de Gmail y mapear parámetros comunes
-        let gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}`;
-        if (queryString) {
-          const params = new URLSearchParams(queryString);
-          if (params.get('subject')) gmailUrl += `&su=${encodeURIComponent(params.get('subject')!)}`;
-          if (params.get('body')) gmailUrl += `&body=${encodeURIComponent(params.get('body')!)}`;
-          if (params.get('cc')) gmailUrl += `&cc=${encodeURIComponent(params.get('cc')!)}`;
-          if (params.get('bcc')) gmailUrl += `&bcc=${encodeURIComponent(params.get('bcc')!)}`;
-        }
-
-        const isMobile = typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const target = isMobile ? url : gmailUrl;
-
-        const opened = window.open(target, '_blank', 'noopener,noreferrer');
-        // Si el popup fue bloqueado, usar fallback a mailto (reemplaza la página actual)
-        if (!opened) {
-          window.location.href = url; // fallback: abrir mailto en el navegador
-        }
-        return;
-      }
-
-      // Default: abrir enlaces externos en nueva pestaña
-      const opened = window.open(url, '_blank', 'noopener,noreferrer');
-      // Solo usar fallback (reemplazar la pestaña actual) si window.open fue bloqueado
-      if (!opened) window.location.href = url;
-    } catch (err) {
-      // En caso raro de error, hacer fallback simple
-      window.location.href = url;
-    }
-  }
+  openSocialLink = openSocialLink;
 }

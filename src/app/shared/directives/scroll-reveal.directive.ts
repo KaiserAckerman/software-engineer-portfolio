@@ -25,6 +25,7 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
   @Input() revealThreshold = 0.1;
 
   private observer?: IntersectionObserver;
+  private isVisible = false;
 
   constructor(
     private el: ElementRef<HTMLElement>,
@@ -43,12 +44,15 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
     this.observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          const shouldShow = entry.isIntersecting && entry.intersectionRatio >= this.revealThreshold;
+          const shouldHide = !entry.isIntersecting || entry.intersectionRatio <= 0.02;
+
+          if (shouldShow && !this.isVisible) {
             this.show();
             if (this.revealOnce) {
               this.observer?.unobserve(this.el.nativeElement);
             }
-          } else if (!this.revealOnce) {
+          } else if (!this.revealOnce && shouldHide && this.isVisible) {
             this.hide();
           }
         });
@@ -67,11 +71,13 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
   }
 
   private show(): void {
+    this.isVisible = true;
     this.renderer.removeClass(this.el.nativeElement, 'scroll-reveal-hidden');
     this.renderer.addClass(this.el.nativeElement, 'scroll-reveal-visible');
   }
 
   private hide(): void {
+    this.isVisible = false;
     this.renderer.removeClass(this.el.nativeElement, 'scroll-reveal-visible');
     this.renderer.addClass(this.el.nativeElement, 'scroll-reveal-hidden');
   }

@@ -1,32 +1,29 @@
-<!-- Fondo global de la página con efectos animados -->
-<div class="global-background fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-  <!-- Animaciones de gradiente -->
+<!-- Fondo global estático (sin animaciones ni capas de estrellas) -->
+<div
+  class="global-background fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
+  aria-hidden="true"
+>
   <div class="animated-gradient absolute inset-0 overflow-hidden pointer-events-none">
     <div class="gradient-blob gradient-blob-1"></div>
     <div class="gradient-blob gradient-blob-2"></div>
     <div class="gradient-blob gradient-blob-3"></div>
-    <div class="gradient-blob gradient-blob-4"></div>
-    <div class="gradient-blob gradient-blob-5"></div>
   </div>
-  
-  <!-- Efecto de partículas/estrellas flotantes -->
-  <div class="stars-background"></div>
 </div>
 
 <!-- Contenido de la página con z-index superior -->
 <div class="relative z-10">
-<app-header></app-header>
+  <app-header></app-header>
 
   <app-hero id="hero"></app-hero>
 
-<main>
+  <main>
     <app-projects id="projects"></app-projects>
     <app-about id="about"></app-about>
     <app-experience id="experience"></app-experience>
     <app-contact id="contact"></app-contact>
-</main>
+  </main>
 
-<app-footer></app-footer>
+  <app-footer></app-footer>
 
-<router-outlet />
+  <router-outlet />
 </div>

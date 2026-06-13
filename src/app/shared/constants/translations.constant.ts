@@ -11,6 +11,19 @@ export const translations = {
       about: 'Acerca de',
       experience: 'Experiencia',
       contact: 'Contacto'
+    },
+    projects: {
+      title: 'Proyectos',
+      subtitle: 'Algunos de mis proyectos destacados',
+      viewDetails: 'Ver detalles',
+      badgeProduction: 'Producción',
+      badgeInProduction: 'En producción',
+      modalRole: 'Rol',
+      modalContext: 'Contexto',
+      modalContributions: 'Lo que hice',
+      modalTechnologies: 'Tecnologías',
+      visitSite: 'Visitar sitio',
+      viewGithub: 'Ver en GitHub',
     }
   },
   en: {
@@ -25,6 +38,19 @@ export const translations = {
       about: 'About',
       experience: 'Experience',
       contact: 'Contact'
+    },
+    projects: {
+      title: 'Projects',
+      subtitle: 'Some of my featured projects',
+      viewDetails: 'View details',
+      badgeProduction: 'Production',
+      badgeInProduction: 'In production',
+      modalRole: 'Role',
+      modalContext: 'Context',
+      modalContributions: 'What I did',
+      modalTechnologies: 'Technologies',
+      visitSite: 'Visit site',
+      viewGithub: 'View on GitHub',
     }
   }
 } as const;

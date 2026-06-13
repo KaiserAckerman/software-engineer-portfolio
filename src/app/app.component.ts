@@ -1,5 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
@@ -29,13 +28,10 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private languageSubscription?: Subscription;
-  private scrollPauseTimer?: number;
-  private readonly boundScrollHandler = () => this.pauseBackgroundWhileScrolling();
 
   constructor(
     private scrollSnapService: ScrollSnapService,
-    private languageService: LanguageService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private languageService: LanguageService
   ) {}
 
   ngOnInit(): void {
@@ -49,37 +45,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.languageSubscription = this.languageService.language$.subscribe(lang => {
       this.updatePageTitle(lang);
     });
-
-    if (isPlatformBrowser(this.platformId)) {
-      window.addEventListener('scroll', this.boundScrollHandler, { passive: true });
-    }
   }
 
   ngOnDestroy(): void {
-    if (this.languageSubscription) {
-      this.languageSubscription.unsubscribe();
-    }
-    if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('scroll', this.boundScrollHandler);
-    }
-    if (this.scrollPauseTimer) {
-      clearTimeout(this.scrollPauseTimer);
-    }
-  }
-
-  /** Libera GPU del fondo animado durante scroll (principal cuello en ventana grande). */
-  private pauseBackgroundWhileScrolling(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    const root = document.documentElement;
-    root.classList.add('perf-pause-bg');
-
-    if (this.scrollPauseTimer) {
-      clearTimeout(this.scrollPauseTimer);
-    }
-    this.scrollPauseTimer = window.setTimeout(() => {
-      root.classList.remove('perf-pause-bg');
-    }, 150);
+    this.languageSubscription?.unsubscribe();
   }
 
   private updatePageTitle(lang: 'es' | 'en'): void {

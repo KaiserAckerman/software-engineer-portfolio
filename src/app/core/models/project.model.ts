@@ -1,13 +1,24 @@
 export interface Project {
   id: string;
-  title: string;
-  description: string;      // Texto corto, sin “muro” de texto
-  technologies: string[];   // IDs de Skill técnicas usadas
-  link?: string;            // Demo / producción
-  github?: string;          // Repositorio
-  image?: string;           // Imagen de portada
-  year?: number;            // Año del proyecto
-  highlight?: boolean;      // Marcar proyectos clave
-  order?: number;           // Para ordenar en UI
-}
+  titleEs: string;
+  titleEn: string;
+  summaryEs: string;
+  summaryEn: string;
+  year?: number;
+  technologies: string[];
+  cardTechnologies?: string[];
+  image?: string;
+  gradient?: string;
+  iconPath?: string;
+  highlight?: boolean;
+  order?: number;
 
+  roleEs?: string;
+  roleEn?: string;
+  contextEs?: string;
+  contextEn?: string;
+  contributionsEs?: string[];
+  contributionsEn?: string[];
+  link?: string;
+  github?: string;
+}

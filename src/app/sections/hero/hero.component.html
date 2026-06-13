@@ -43,7 +43,7 @@
           ></app-encrypted-text>"
         </p>
 
-        <div appScrollReveal class="hero-cta animate-fade-in-delay-3 scroll-reveal-delay-4">
+        <div appScrollReveal [revealThreshold]="0.22" class="hero-cta scroll-reveal-delay-4">
           <button class="hero-button primary" type="button" (click)="downloadCv()">
             <span>Descargar CV</span>
           </button>

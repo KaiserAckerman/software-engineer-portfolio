@@ -356,13 +356,8 @@
     radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.08) 1px, transparent 1px);
   background-size: 30px 30px, 25px 25px, 35px 35px, 28px 28px;
   background-position: 0 0, 10px 10px, 5px 5px, 15px 15px;
-  animation: noiseMove 20s linear infinite;
-  filter: blur(0.5px);
-
-  @media (min-width: 1024px) {
-    animation: none;
-    filter: none;
-  }
+  animation: none;
+  filter: none;
 }
 
 // Marco geométrico (círculo)

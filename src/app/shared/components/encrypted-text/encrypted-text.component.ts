@@ -12,9 +12,9 @@ import { cn } from '../../utils/utils';
 export class EncryptedTextComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() text: string = '';
   @Input() className: string = '';
-  @Input() revealDelayMs: number = 50;
+  @Input() revealDelayMs: number = 35;
   @Input() charset: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-={}[];:,.<>/?';
-  @Input() flipDelayMs: number = 50;
+  @Input() flipDelayMs: number = 120;
   @Input() encryptedClassName: string = '';
   @Input() revealedClassName: string = '';
 
@@ -168,6 +168,7 @@ export class EncryptedTextComponent implements OnInit, AfterViewInit, OnChanges,
     }
 
     if (currentRevealCount >= totalLength) {
+      this.animationFrameRef = null;
       return;
     }
 
