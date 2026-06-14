@@ -6,7 +6,10 @@ import { LanguageService } from '../../core/services/language.service';
 interface ExperienceItem {
   id: string;
   gradient: string;
-  iconPath: string;
+  iconPath?: string;
+  image?: string;
+  imageAltEs?: string;
+  imageAltEn?: string;
   titleEs: string;
   titleEn: string;
   companyEs: string;
@@ -15,7 +18,8 @@ interface ExperienceItem {
   periodEn: string;
   descriptionEs: string;
   descriptionEn: string;
-  tags: string[];
+  tagsEs: string[];
+  tagsEn: string[];
 }
 
 @Component({
@@ -29,46 +33,36 @@ export class ExperienceComponent implements OnInit {
 
   experiences: ExperienceItem[] = [
     {
-      id: 'exp-1',
-      gradient: 'from-blue-500 to-purple-600',
+      id: 'exp-freelance',
+      gradient: 'from-blue-500 to-indigo-600',
       iconPath: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
-      titleEs: 'Desarrollador Full Stack Senior',
-      titleEn: 'Senior Full Stack Developer',
-      companyEs: 'Tech Solutions Inc.',
-      companyEn: 'Tech Solutions Inc.',
-      periodEs: '2023 — Presente',
-      periodEn: '2023 — Present',
-      descriptionEs: 'Desarrollo de aplicaciones web escalables, APIs REST y liderazgo técnico en equipos ágiles.',
-      descriptionEn: 'Building scalable web applications, REST APIs, and providing technical leadership in agile teams.',
-      tags: ['Angular', 'NestJS', 'PostgreSQL']
+      titleEs: 'Desarrollador Web Freelance',
+      titleEn: 'Freelance Web Developer',
+      companyEs: 'Clientes independientes',
+      companyEn: 'Independent clients',
+      periodEs: '2025 — Presente',
+      periodEn: '2025 — Present',
+      descriptionEs: 'Desarrollo y mantenimiento de sitios web para clientes en México: tiendas Shopify con Liquid y temas custom, sitios WordPress con PHP y Tailwind. Trabajo directo con clientes desde levantamiento de requisitos hasta producción.',
+      descriptionEn: 'Development and maintenance of websites for clients in Mexico: Shopify stores with Liquid and custom themes, WordPress sites with PHP and Tailwind. Direct client work from requirements gathering through production.',
+      tagsEs: ['Shopify', 'WordPress', 'Liquid', 'Figma'],
+      tagsEn: ['Shopify', 'WordPress', 'Liquid', 'Figma']
     },
     {
-      id: 'exp-2',
-      gradient: 'from-green-500 to-teal-600',
-      iconPath: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
-      titleEs: 'Desarrollador Frontend',
-      titleEn: 'Frontend Developer',
-      companyEs: 'Digital Agency',
-      companyEn: 'Digital Agency',
-      periodEs: '2021 — 2023',
-      periodEn: '2021 — 2023',
-      descriptionEs: 'Interfaces modernas y responsivas en colaboración con equipos de diseño y producto.',
-      descriptionEn: 'Modern responsive interfaces in collaboration with design and product teams.',
-      tags: ['React', 'TypeScript', 'Figma']
-    },
-    {
-      id: 'exp-3',
-      gradient: 'from-orange-500 to-pink-600',
-      iconPath: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
-      titleEs: 'Desarrollador Junior',
-      titleEn: 'Junior Developer',
-      companyEs: 'Startup Tech',
-      companyEn: 'Startup Tech',
-      periodEs: '2019 — 2021',
-      periodEn: '2019 — 2021',
-      descriptionEs: 'Primeros proyectos en producción, aprendizaje continuo y soporte a funcionalidades core.',
-      descriptionEn: 'First production projects, continuous learning, and support for core product features.',
-      tags: ['JavaScript', 'PHP', 'MySQL']
+      id: 'exp-upqroo',
+      gradient: 'from-slate-100 to-blue-50',
+      image: '/assets/UPQROO.png',
+      imageAltEs: 'Logotipo de la Universidad Politécnica de Quintana Roo',
+      imageAltEn: 'Polytechnic University of Quintana Roo logo',
+      titleEs: 'Ingeniería de Software',
+      titleEn: 'Software Engineering',
+      companyEs: 'Universidad Politécnica de Quintana Roo (UPQROO)',
+      companyEn: 'Polytechnic University of Quintana Roo (UPQROO)',
+      periodEs: '2022 — 2025 · Titulado',
+      periodEn: '2022 — 2025 · Graduated',
+      descriptionEs: 'Licenciatura en Ingeniería de Software. Egresado en 2025. Proyecto de estadías profesionales (~600 h): rediseño integral de tienda Shopify para Wattko, incluido en requisitos de titulación.',
+      descriptionEn: 'Bachelor\'s degree in Software Engineering. Graduated in 2025. Professional internship capstone (~600 hrs): full Shopify store redesign for Wattko, included in graduation requirements.',
+      tagsEs: ['Ingeniería de Software', 'Estadías', 'Proyecto de titulación'],
+      tagsEn: ['Software Engineering', 'Internship', 'Capstone project']
     }
   ];
 
@@ -85,8 +79,8 @@ export class ExperienceComponent implements OnInit {
 
   get subtitle(): string {
     return this.currentLanguage() === 'es'
-      ? 'Mi trayectoria profesional'
-      : 'My professional journey';
+      ? 'Formación y experiencia'
+      : 'Education & experience';
   }
 
   getTitle(exp: ExperienceItem): string {
@@ -103,6 +97,16 @@ export class ExperienceComponent implements OnInit {
 
   getDescription(exp: ExperienceItem): string {
     return this.currentLanguage() === 'es' ? exp.descriptionEs : exp.descriptionEn;
+  }
+
+  getTags(exp: ExperienceItem): string[] {
+    return this.currentLanguage() === 'es' ? exp.tagsEs : exp.tagsEn;
+  }
+
+  getImageAlt(exp: ExperienceItem): string {
+    return this.currentLanguage() === 'es'
+      ? (exp.imageAltEs ?? '')
+      : (exp.imageAltEn ?? '');
   }
 
   getDelayClass(index: number): string {

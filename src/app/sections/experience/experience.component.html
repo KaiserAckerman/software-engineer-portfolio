@@ -7,26 +7,44 @@
       <p class="text-gray-600 dark:text-gray-300 text-lg">{{ subtitle }}</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
       @for (exp of experiences; track exp.id; let i = $index) {
         <div
           appScrollReveal
           [class]="'experience-card project-card ' + getDelayClass(i) + ' bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow'"
         >
           <div
-            class="w-full h-48 rounded-lg mb-4 flex flex-col items-center justify-center text-white bg-gradient-to-br"
-            [ngClass]="exp.gradient"
+            class="experience-card__header w-full h-48 rounded-lg mb-4 flex flex-col items-center justify-center"
+            [ngClass]="exp.image
+              ? 'bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-700'
+              : 'text-white bg-gradient-to-br ' + exp.gradient"
           >
-            <svg class="w-14 h-14 mb-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="exp.iconPath"></path>
-            </svg>
-            <span class="text-sm font-semibold opacity-90">{{ getPeriod(exp) }}</span>
+            @if (exp.image) {
+              <div class="experience-card__logo-wrap mb-3">
+                <img
+                  [src]="exp.image"
+                  [alt]="getImageAlt(exp)"
+                  class="experience-card__logo"
+                />
+              </div>
+            } @else if (exp.iconPath) {
+              <svg class="w-14 h-14 mb-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="exp.iconPath"></path>
+              </svg>
+            }
+            <span
+              [class]="exp.image
+                ? 'text-sm font-semibold text-gray-600 dark:text-gray-300'
+                : 'text-sm font-semibold opacity-90'"
+            >
+              {{ getPeriod(exp) }}
+            </span>
           </div>
           <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ getTitle(exp) }}</h3>
           <p class="text-purple-600 dark:text-purple-400 font-semibold mb-3">{{ getCompany(exp) }}</p>
           <p class="text-gray-600 dark:text-gray-300 mb-4">{{ getDescription(exp) }}</p>
           <div class="flex flex-wrap gap-2">
-            @for (tag of exp.tags; track tag) {
+            @for (tag of getTags(exp); track tag) {
               <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm">
                 {{ tag }}
               </span>

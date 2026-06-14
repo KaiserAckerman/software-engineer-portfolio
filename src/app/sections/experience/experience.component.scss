@@ -1,3 +1,17 @@
 .experience-card {
   // Hereda estilos de .project-card en plantilla (mismo layout que proyectos)
 }
+
+.experience-card__logo-wrap {
+  border-radius: 8px;
+  overflow: hidden;
+  line-height: 0;
+  max-width: 85%;
+}
+
+.experience-card__logo {
+  display: block;
+  height: 4.5rem;
+  width: auto;
+  max-width: 100%;
+}
