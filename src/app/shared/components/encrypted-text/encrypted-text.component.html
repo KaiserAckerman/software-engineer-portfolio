@@ -7,7 +7,7 @@
     class="encrypted-text-wrapper">
     @for (char of displayChars; track $index) {
       @if (char === ' ') {
-        <span [class]="getCharClass($index)" class="encrypted-text-char encrypted-text-space">&nbsp;</span>
+        <span [class]="getCharClass($index)" class="encrypted-text-char encrypted-text-space">&ngsp;</span>
       } @else {
         <span [class]="getCharClass($index)" class="encrypted-text-char">{{ char }}</span>
       }

@@ -71,7 +71,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   downloadCv(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     const link = document.createElement('a');
-    link.href = '/assets/cv.pdf';
+    link.href = '/assets/Roberto-Vallejo-CV.pdf';
     link.download = 'Roberto-Vallejo-CV.pdf';
     link.target = '_blank';
     link.rel = 'noopener';

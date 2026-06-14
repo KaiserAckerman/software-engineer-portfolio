@@ -33,6 +33,6 @@
   display: inline;
   // Asegurar que los espacios sean visibles y tengan el ancho correcto
   min-width: 0.25em; // Ancho mínimo para espacios
-  white-space: pre; // Preservar espacios
+  white-space: pre-wrap; // Preservar espacios permitiendo salto de línea
 }
 
