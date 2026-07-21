@@ -48,8 +48,12 @@
       }
     </div>
 
-    <span class="project-detail-modal__badge project-detail-modal__badge--production">
-      {{ labels.badgeInProduction }}
+    <span
+      class="project-detail-modal__badge"
+      [class.project-detail-modal__badge--production]="!isLab"
+      [class.project-detail-modal__badge--lab]="isLab"
+    >
+      {{ badgeLabel }}
     </span>
 
     @if (getRole()) {

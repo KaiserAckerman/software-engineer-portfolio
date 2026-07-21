@@ -12,6 +12,7 @@ export interface Project {
   iconPath?: string;
   highlight?: boolean;
   order?: number;
+  badgeType?: 'production' | 'lab';
 
   roleEs?: string;
   roleEn?: string;

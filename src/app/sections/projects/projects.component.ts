@@ -40,8 +40,10 @@ export class ProjectsComponent implements OnInit {
     return this.currentLanguage() === 'es' ? project.summaryEs : project.summaryEn;
   }
 
-  getBadge(): string {
-    return this.labels().badgeProduction;
+  getBadge(project: Project): string {
+    return project.badgeType === 'lab'
+      ? this.labels().badgeLab
+      : this.labels().badgeProduction;
   }
 
   getIconPath(project: Project): string {

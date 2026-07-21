@@ -148,6 +148,16 @@
       color: #93c5fd;
     }
   }
+
+  &--lab {
+    background: #dcfce7;
+    color: #15803d;
+
+    :host-context(.dark) & {
+      background: #14532d;
+      color: #86efac;
+    }
+  }
 }
 
 .project-detail-modal__section {

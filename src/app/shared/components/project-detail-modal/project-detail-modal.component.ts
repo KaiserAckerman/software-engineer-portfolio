@@ -59,6 +59,14 @@ export class ProjectDetailModalComponent implements OnChanges, OnDestroy {
     return this.project?.iconPath ?? this.defaultIcon;
   }
 
+  get isLab(): boolean {
+    return this.project?.badgeType === 'lab';
+  }
+
+  get badgeLabel(): string {
+    return this.isLab ? this.labels.badgeInLab : this.labels.badgeInProduction;
+  }
+
   getTitle(): string {
     if (!this.project) return '';
     return this.language === 'es' ? this.project.titleEs : this.project.titleEn;

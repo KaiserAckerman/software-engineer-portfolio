@@ -41,9 +41,14 @@
                 </div>
               }
               <span
-                class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide bg-white/90 dark:bg-gray-900/90 text-blue-700 dark:text-blue-300"
+                class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide bg-white/90 dark:bg-gray-900/90"
+                [ngClass]="
+                  project.badgeType === 'lab'
+                    ? 'text-green-700 dark:text-green-300'
+                    : 'text-blue-700 dark:text-blue-300'
+                "
               >
-                {{ getBadge() }}
+                {{ getBadge(project) }}
               </span>
               @if (project.year) {
                 <span
